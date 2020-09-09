@@ -23,9 +23,11 @@ function draw(tFrame) {
     drawPlatform(context)
     drawBall(context)
     drawScore(context)
-    
+    if (gameState.candy.x != -100 && gameState.candy.y != -100) 
+    {
+        drawCandy(context, gameState.candy.x, gameState.candy.y)
+    }
 }
-
 
 
 function run(tFrame) {
@@ -75,6 +77,19 @@ function drawScore(context) {
 	context.fillText("Score: " + gameState.score, 20, 20 );
 }
 
+function drawCandy(context, paramx, paramy)
+{
+    context.beginPath();
+    context.moveTo(50 + paramx, 50 + paramy);
+    context.lineTo(150 + paramx, 50 + paramy); 
+    context.lineTo(150 + paramx, 150 + paramy); 
+    context.lineTo(50 + paramx, 150 + paramy); 
+    context.closePath(); 
+    context.strokeStyle = '#1a2edb'; 
+    context.lineWidth = 5; 
+    context.stroke();
+}
+
 function setup() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -109,12 +124,20 @@ function setup() {
         angle : 0
     }
 
+    gameState.candy = {
+        x: -100,
+        y: -100,
+        vy: 10
+    }
+
     gameState.particlePos = {}
     gameState.score = 0
 }
 
 setInterval(incScore, 1000);
+setInterval(helperDraw, 15000);
 setInterval(incSpeed, 30000);
+
 function incScore() {
     gameState.score += 1
 }
@@ -128,11 +151,29 @@ function incSpeed()
         gameState.ball.vy -= 4
 }
 
+function helperDraw()
+{
+    const context = canvas.getContext('2d');
+    let random = getRandomArbitrary(50, canvas.width - 100)
+    drawCandy(context, random, 50)
+    gameState.candy.x = 50 + random
+    gameState.candy.y = 50
+
+}
+
 function update(tick) {
     
     
     const vx = (gameState.pointer.x - gameState.player.x) // 10
     gameState.player.x += vx
+
+    gameState.candy.y += gameState.candy.vy
+
+    if (collisionCandy(gameState.candy, gameState.player)) {
+        gameState.candy.x = -100
+        gameState.candy.y = -100
+        gameState.score += 15
+    }
 
     const ball = gameState.ball
 
@@ -162,11 +203,29 @@ function update(tick) {
         ball.vx = -ball.vx;
         ball.x = ball.radius;
     }
+    
 }
 
 function collision(b, p) {
     if(b.x + gameState.ball.radius >= p.x - p.width/2
         && b.x - gameState.ball.radius <=(p.x - p.width/2 + p.width)) {
+		if(b.y >= (p.y - p.height) && p.y > 0){
+			
+			return true;
+		}
+		
+		else if(b.y <= p.height && p.y == 0) {
+			
+			return true;
+		}
+		
+		else return false;
+	}
+}
+
+function collisionCandy(b, p) {
+    if(b.x + 50 >= p.x - p.width/2
+        && b.x - 50 <=(p.x - p.width/2 + p.width)) {
 		if(b.y >= (p.y - p.height) && p.y > 0){
 			
 			return true;
@@ -204,8 +263,6 @@ function changeAngle(angle) {
     let tmpSpeed = gameState.ball.vy
     gameState.ball.vx = -(Math.cos(radians) * gameState.ball.vx) + getRandomArbitrary(-5, 5);
     gameState.ball.vy = -(Math.sin(radians) * gameState.ball.vy);
-
-    console.log(gameState.ball.vy)
   }
 
  function angleTo(x, y) {
