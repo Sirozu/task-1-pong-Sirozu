@@ -47,6 +47,8 @@ function stopGame() {
     window.cancelAnimationFrame(gameState.stopCycle);
 }
 
+
+
 function drawPlatform(context) {
     const {x, y, width, height} = gameState.player;
     context.beginPath();
@@ -111,9 +113,23 @@ function setup() {
     gameState.score = 0
 }
 
+setInterval(incScore, 1000);
+setInterval(incSpeed, 30000);
+function incScore() {
+    gameState.score += 1
+}
+
+function incSpeed()
+{
+    if (gameState.ball.vy > 0) 
+        gameState.ball.vy += 4
+
+    if (gameState.ball.vy < 0) 
+        gameState.ball.vy -= 4
+}
 
 function update(tick) {
-
+    
     
     const vx = (gameState.pointer.x - gameState.player.x) // 10
     gameState.player.x += vx
@@ -166,8 +182,8 @@ function collision(b, p) {
 }
 
 function collideAction(ball, p) {
-	//ball.vy = -ball.vy;
-	gameState.score += 1
+    //ball.vy = -ball.vy;    
+    
     ball.y = p.y - p.height;
     gameState.particlePos.y = ball.y + ball.radius;
     gameState.particlePos.x = ball.x;
@@ -177,16 +193,19 @@ function collideAction(ball, p) {
 }
 
 
+  
+
+
 function changeAngle(angle) {
     if(angle == 0) angle = 1; 
     angle = angle;
     radians = angle / (180 * Math.PI) * 10;
-    //console.log(Math.cos(radians))
- 
+    
+    let tmpSpeed = gameState.ball.vy
     gameState.ball.vx = -(Math.cos(radians) * gameState.ball.vx) + getRandomArbitrary(-5, 5);
     gameState.ball.vy = -(Math.sin(radians) * gameState.ball.vy);
-    if (score % 30 > 0)
-        gameState.ball.vy += 1
+
+    console.log(gameState.ball.vy)
   }
 
  function angleTo(x, y) {
@@ -196,7 +215,6 @@ function changeAngle(angle) {
   function getRandomArbitrary(min, max) {
       
       let a = Math.random() * (max - min) + min
-      console.log(a)
     return a
   }
 
