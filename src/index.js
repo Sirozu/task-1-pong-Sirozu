@@ -173,7 +173,6 @@ function update(tick) {
         gameState.candy.x = -100
         gameState.candy.y = -100
         gameState.score += 15
-        gameState.candy.y += 200
     }
 
     const ball = gameState.ball
