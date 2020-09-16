@@ -27,12 +27,24 @@ function draw(tFrame) {
     {
         drawCandy(context, gameState.candy.x, gameState.candy.y)
     }
+
+    if (gameState.stopGame)
+    {
+        //const context = canvas.getContext('2d');
+        //context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStlye = "black";
+        context.font = "20px Arial, sans-serif";
+        context.textAlign = "center";
+        context.textBaseline = "large";
+        context.fillText("Game Over - You scored " + gameState.score + " points!", context.width/2, context.height/2 );
+    }
 }
 
 
 function run(tFrame) {
     gameState.stopCycle = window.requestAnimationFrame(run);
 
+    gameState.stopGame = false;
     const nextTick = gameState.lastTick + gameState.tickLength;
     let numTicks = 0;
 
@@ -45,9 +57,7 @@ function run(tFrame) {
     gameState.lastRender = tFrame;
 }
 
-function stopGame() {
-    window.cancelAnimationFrame(gameState.stopCycle);
-}
+
 
 
 
@@ -132,6 +142,8 @@ function setup() {
 
     gameState.particlePos = {}
     gameState.score = 0
+
+    gameState.stopGame = false;
 }
 
 setInterval(incScore, 1000);
@@ -267,6 +279,20 @@ function changeAngle(angle) {
       let a = Math.random() * (max - min) + min
     return a
   }
+
+//   function stopGame() {
+//     window.cancelAnimationFrame(gameState.stopCycle);
+// }
+
+  function stopGame() {
+
+    gameState.stopGame = true;
+    window.cancelAnimationFrame(gameState.stopCycle)
+
+    // Stop the Animation
+    
+    
+}
 
 setup();
 run();
