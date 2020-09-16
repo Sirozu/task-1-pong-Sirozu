@@ -32,14 +32,6 @@ function draw(tFrame) {
 function drawOverFrame()
 {
     const context = canvas.getContext('2d');
-    //context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillStlye = "black";
-    //context.font = "20px Arial, sans-serif";
-    //context.textAlign = "center";
-    //context.textBaseline = "large";
-    context.fillText("Game Over - You scored " + gameState.score + " points!", context.width/2, context.height/2 );
-
-
     var btnRetry = {
         x:canvas.width/2- 300,
      y:canvas.height/2 - 100,
