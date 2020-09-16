@@ -27,24 +27,62 @@ function draw(tFrame) {
     {
         drawCandy(context, gameState.candy.x, gameState.candy.y)
     }
+}
 
-    if (gameState.stopGameAnimation)
-    {
-        //const context = canvas.getContext('2d');
-        //context.clearRect(0, 0, canvas.width, canvas.height);
-        context.fillStlye = "black";
-        context.font = "20px Arial, sans-serif";
-        context.textAlign = "center";
-        context.textBaseline = "large";
-        context.fillText("Game Over - You scored " + gameState.score + " points!", context.width/2, context.height/2 );
+function drawOverFrame()
+{
+    const context = canvas.getContext('2d');
+    //context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStlye = "black";
+    //context.font = "20px Arial, sans-serif";
+    //context.textAlign = "center";
+    //context.textBaseline = "large";
+    context.fillText("Game Over - You scored " + gameState.score + " points!", context.width/2, context.height/2 );
+
+
+    var btnRetry = {
+        x:canvas.width/2- 300,
+     y:canvas.height/2 - 100,
+     w:600,
+     h:200,
+     text:"Retry",
+     state:"default",
+     draw: function(){
+         context.font = "30px Arial ";
+         switch(this.state){
+           case "over":      
+             context.fillStyle = "darkred";
+                 context.fillRect(this.x,this.y,this.w,this.h);
+           context.fillStyle = "black";
+           context.fillText("Game Over - You scored " + gameState.score + " points! Retry?",this.x+this.w/2 - context.measureText("Retry").width/2 - 230, this.y+this.h/2 +20);
+         break;
+           default:
+             context.fillStyle = "red";
+                 context.fillRect(this.x,this.y,this.w,this.h);
+           context.fillStyle = "black";
+           context.fillText("Game Over - You scored " + gameState.score + " points! Retry?",this.x+this.w/2 - context.measureText("Retry").width/2 - 230, this.y+this.h/2+20);
+       }
     }
 }
 
+    btnRetry.draw();
+}
+
+
+canvas.addEventListener("mousedown",function(e){
+    setup();
+    run();
+},false);
 
 function run(tFrame) {
-    gameState.stopCycle = window.requestAnimationFrame(run);
+    if(gameState.stopGameAnimation)
+    {
+        drawOverFrame()
+        stopGame()
+        return;
+    } 
 
-    gameState.stopGameAnimation = false;
+    gameState.stopCycle = window.requestAnimationFrame(run);
     const nextTick = gameState.lastTick + gameState.tickLength;
     let numTicks = 0;
 
@@ -198,7 +236,9 @@ function update(tick) {
 
     if(ball.y + ball.radius > canvas.height) {
         ball.y = canvas.height - ball.radius;
-        stopGame();
+        
+        gameState.stopGameAnimation = true;
+        //stopGame();
     } 
         
     if(ball.y < 0) {
@@ -256,10 +296,6 @@ function collideAction(ball, p) {
 
 }
 
-
-  
-
-
 function changeAngle(angle) {
     if(angle == 0) angle = 1; 
     angle = angle;
@@ -280,18 +316,9 @@ function changeAngle(angle) {
     return a
   }
 
-//   function stopGame() {
-//     window.cancelAnimationFrame(gameState.stopCycle);
-// }
 
-  function stopGame() {
-
-    gameState.stopGameAnimation = true;
+function stopGame() {
     window.cancelAnimationFrame(gameState.stopCycle)
-
-    // Stop the Animation
-    
-    
 }
 
 setup();
