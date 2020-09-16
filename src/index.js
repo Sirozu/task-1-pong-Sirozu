@@ -28,7 +28,7 @@ function draw(tFrame) {
         drawCandy(context, gameState.candy.x, gameState.candy.y)
     }
 
-    if (gameState.stopGame)
+    if (gameState.stopGameAnimation)
     {
         //const context = canvas.getContext('2d');
         //context.clearRect(0, 0, canvas.width, canvas.height);
@@ -44,7 +44,7 @@ function draw(tFrame) {
 function run(tFrame) {
     gameState.stopCycle = window.requestAnimationFrame(run);
 
-    gameState.stopGame = false;
+    gameState.stopGameAnimation = false;
     const nextTick = gameState.lastTick + gameState.tickLength;
     let numTicks = 0;
 
@@ -143,7 +143,7 @@ function setup() {
     gameState.particlePos = {}
     gameState.score = 0
 
-    gameState.stopGame = false;
+    gameState.stopGameAnimation = false;
 }
 
 setInterval(incScore, 1000);
@@ -286,7 +286,7 @@ function changeAngle(angle) {
 
   function stopGame() {
 
-    gameState.stopGame = true;
+    gameState.stopGameAnimation = true;
     window.cancelAnimationFrame(gameState.stopCycle)
 
     // Stop the Animation
