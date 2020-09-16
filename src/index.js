@@ -85,7 +85,7 @@ function drawCandy(context, paramx, paramy)
     context.lineTo(150 + paramx, 150 + paramy); 
     context.lineTo(50 + paramx, 150 + paramy); 
     context.closePath(); 
-    context.strokeStyle = '#1a2edb'; 
+    context.strokeStyle = '#1a2edb';
     context.lineWidth = 5; 
     context.stroke();
 }
@@ -173,6 +173,7 @@ function update(tick) {
         gameState.candy.x = -100
         gameState.candy.y = -100
         gameState.score += 15
+        gameState.candy.y += 200
     }
 
     const ball = gameState.ball
@@ -214,29 +215,22 @@ function collision(b, p) {
 			return true;
 		}
 		
-		else if(b.y <= p.height && p.y == 0) {
-			
-			return true;
-		}
-		
-		else return false;
+		else
+			return (b.y <= p.height && p.y == 0) ;
+
 	}
 }
 
 function collisionCandy(b, p) {
     if(b.x + 50 >= p.x - p.width/2
         && b.x - 50 <=(p.x - p.width/2 + p.width)) {
-		if(b.y >= (p.y - p.height) && p.y > 0){
+		if(b.y >= (p.y - p.height - 100) && p.y > 0){
 			
 			return true;
 		}
 		
-		else if(b.y <= p.height && p.y == 0) {
-			
-			return true;
-		}
-		
-		else return false;
+		else 
+			return b.y <= p.height && p.y == 0;
 	}
 }
 
